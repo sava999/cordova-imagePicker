@@ -53,12 +53,14 @@
 
         if (i < [_imageViewArray count]) {
             UIImageView *imageView = [_imageViewArray objectAtIndex:i];
-            imageView.image = [UIImage imageWithCGImage:asset.asset.thumbnail];
+            imageView.image = [UIImage imageWithCGImage:asset.asset.aspectRatioThumbnail];
         } else {
-            UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageWithCGImage:asset.asset.thumbnail]];
+            UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageWithCGImage:asset.asset.aspectRatioThumbnail]];
+            [imageView setClipsToBounds:true];
+            [imageView setContentMode:UIViewContentModeScaleAspectFill];
             [_imageViewArray addObject:imageView];
         }
-        
+
         if (i < [_overlayViewArray count]) {
             UIImageView *overlayView = [_overlayViewArray objectAtIndex:i];
             overlayView.hidden = asset.selected ? NO : YES;
@@ -78,9 +80,9 @@
     CGPoint point = [tapRecognizer locationInView:self];
     CGFloat totalWidth = self.rowAssets.count * 75 + (self.rowAssets.count - 1) * 4;
     CGFloat startX = (self.bounds.size.width - totalWidth) / 2;
-    
-	CGRect frame = CGRectMake(startX, 2, 75, 75);
-	
+
+	CGRect frame = CGRectMake(0, 2, self.bounds.size.width / 4 - 3, self.bounds.size.width / 4 - 3);
+
 	for (int i = 0; i < [_rowAssets count]; ++i) {
         if (CGRectContainsPoint(frame, point)) {
             ELCAsset *asset = [_rowAssets objectAtIndex:i];
@@ -94,11 +96,11 @@
 }
 
 - (void)layoutSubviews
-{    
+{
     CGFloat totalWidth = self.rowAssets.count * 75 + (self.rowAssets.count - 1) * 4;
     CGFloat startX = (self.bounds.size.width - totalWidth) / 2;
-    
-	CGRect frame = CGRectMake(startX, 2, 75, 75);
+
+	CGRect frame = CGRectMake(0, 2, self.bounds.size.width / 4 - 3, self.bounds.size.width / 4 - 3);
 	
 	for (int i = 0; i < [_rowAssets count]; ++i) {
 		UIImageView *imageView = [_imageViewArray objectAtIndex:i];
